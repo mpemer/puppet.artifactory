@@ -114,7 +114,7 @@ class s3fs {
         
     exec { "s3fs-mount-$bucket":
       path        => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
-      unless      => "/bin/df /mnt/s3/$bucket &>/dev/null | /bin/grep -E '^s3fs' -q &>/dev/null",
+      unless      => "/bin/df /mnt/s3/$bucket | /bin/grep -E '^s3fs' -q &>/dev/null",
       logoutput   => on_failure,
       command     => "/usr/local/bin/s3fs $bucket /mnt/s3/$bucket -o allow_other -o use_cache=/mnt/s3/cache",
       require     => File["/mnt/s3/$bucket"],
