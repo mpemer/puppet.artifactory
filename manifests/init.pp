@@ -92,7 +92,7 @@ class s3fs {
                        Package['libcurl4-openssl-dev'],
                        Package['libxml2-dev'],
                        Package['libcrypto++-dev'],
-                       File["s3fs-cache-directory-$bucket"],
+                       File["s3fs-cache-directory"],
                      ],
     }
     
