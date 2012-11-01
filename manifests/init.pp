@@ -38,47 +38,47 @@ class s3fs {
       }
     }
   }
-
-  define s3fs_baseline
+  
+  define s3fs_mount ($bucket, $access_key, $secret_access_key )
   {
     package {
-      'pkg-config':
+      "pkg-config-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'build-essential':
+      "build-essential-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'fuse-utils':
+      "fuse-utils-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'mime-support':
+      "mime-support-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'libfuse-dev':
+      "libfuse-dev-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'libcurl4-openssl-dev':
+      "libcurl4-openssl-dev-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'libxml2-dev':
+      "libxml2-dev-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
-      'libcrypto++-dev':
+      "libcrypto++-dev-$name":
         ensure => present,
         require => Exec['aptgetupdate'];
     }  
   
-    file { 'aws-creds-file':
+    file { "aws-creds-file-$name":
       path => '/etc/passwd-s3fs',
       mode => '600',
     }
 
-    file { 's3fs-cache-directory':
+    file { "s3fs-cache-directory-$name":
       path => '/mnt/s3/cache',
       ensure => directory,
     }
     
-    exec { 's3fs-install':
+    exec { "s3fs-install-$name":
       path        => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
       creates     => '/usr/local/bin/s3fs',
       logoutput   => on_failure,
@@ -92,28 +92,22 @@ class s3fs {
                        Package['libcurl4-openssl-dev'],
                        Package['libxml2-dev'],
                        Package['libcrypto++-dev'],
-                       File['s3fs-cache-directory'],
+                       File["s3fs-cache-directory-$name"],
                      ],
     }
-
-  }
-  
-  define s3fs_mount ($bucket, $access_key, $secret_access_key )
-  {
-    s3fs_baseline { "${s3fs_baseline}-${bucket}" : }
     
     line { "aws-creds-$bucket":
       file => '/etc/passwd-s3fs',
       line => "$bucket:$access_key:$secret_access_key",
       require     => [
-                       File['aws-creds-file'],
+                       File["aws-creds-file-$name"],
                      ],        
     }
     
     file { "$name":
       ensure => directory,
       require     => [
-                       Exec['s3fs-install'],
+                       Exec["s3fs-install-$name"],
                      ],        
     }
         
