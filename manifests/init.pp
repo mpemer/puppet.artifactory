@@ -39,7 +39,7 @@ class s3fs {
     }
   }
 
-  define s3fs_mount ($bucket, $access_key, $secret_access_key )
+  define s3fs_baseline
   {
     package {
       'pkg-config':
@@ -73,14 +73,6 @@ class s3fs {
       mode => '600',
     }
 
-    line { "aws-creds-$bucket":
-      file => '/etc/passwd-s3fs',
-      line => "$bucket:$access_key:$secret_access_key",
-      require     => [
-                       File['aws-creds-file'],
-                     ],        
-    }
-    
     file { 's3fs-cache-directory':
       path => '/mnt/s3/cache',
       ensure => directory,
@@ -100,11 +92,24 @@ class s3fs {
                        Package['libcurl4-openssl-dev'],
                        Package['libxml2-dev'],
                        Package['libcrypto++-dev'],
-                       Line["aws-creds-$bucket"],
                        File['s3fs-cache-directory'],
                      ],
     }
 
+  }
+  
+  define s3fs_mount ($bucket, $access_key, $secret_access_key )
+  {
+    s3fs_baseline { "${s3fs_baseline}-${bucket}" : }
+    
+    line { "aws-creds-$bucket":
+      file => '/etc/passwd-s3fs',
+      line => "$bucket:$access_key:$secret_access_key",
+      require     => [
+                       File['aws-creds-file'],
+                     ],        
+    }
+    
     file { "$name":
       ensure => directory,
       require     => [
@@ -117,7 +122,10 @@ class s3fs {
       onlyif      => "/bin/df $name 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
       logoutput   => on_failure,
       command     => "/usr/local/bin/s3fs $bucket $name -o allow_other -o use_cache=/mnt/s3/cache",
-      require     => File["$name"],
+      require     => [
+                       Line["aws-creds-$bucket"],
+                       File["$name"],
+                    ],
     }
 
   }
