@@ -113,10 +113,10 @@ class s3fs {
     }
         
     exec { "s3fs-mount-$bucket":
+      unless      => "(/bin/df /mnt/s3/$bucket | /bin/grep -E '^s3fs' -q ) &>/dev/null",
       logoutput   => on_failure,
       command     => "/usr/local/bin/s3fs $bucket /mnt/s3/$bucket -o allow_other -o use_cache=/mnt/s3/cache",
-      subscribe   => File["/mnt/s3/$bucket"],
-      refreshonly => true,
+      require     => File["/mnt/s3/$bucket"],
     }
 
   }
