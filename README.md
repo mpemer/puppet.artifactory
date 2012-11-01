@@ -1,3 +1,8 @@
+iteego/puppet.s3fs
+==================
+
+S3fs puppet module
+
 The s3fs puppet module allows you to mount Amazon S3 buckets
 as a part of your file system.
 
@@ -17,7 +22,13 @@ include s3fs
 .
 .
 .
+# Run this once:
+s3fs::s3fs_installation { 's3fs_installation': }
 
+# Run one of these for each mount point you want
+# note that the buckets have to exist
+# the module does not automatically create them...
+#
 s3fs::s3fs_mount { 'some-unique-name-of-your-choice':
   bucket            => '<YOUR BUCKET NAME>',
   access_key        => '<YOUR ACCESS KEY>',
