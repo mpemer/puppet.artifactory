@@ -27,11 +27,12 @@ class s3fs {
       }
       present: {
         exec { "/bin/echo '${line}' >> '${file}'":
-        unless => "/bin/grep -qFx '${line}' '${file}'"
+          unless => "/bin/grep -qFx '${line}' '${file}'",
+        }
       }    
       absent: {
         exec { "/bin/grep -vFx '${line}' '${file}' | /usr/bin/tee '${file}' > /dev/null 2>&1":
-          onlyif => "/bin/grep -qFx '${line}' '${file}'"
+          onlyif => "/bin/grep -qFx '${line}' '${file}'",
         }
       }
     }
@@ -40,7 +41,7 @@ class s3fs {
   define s3fs_mount ($bucket, $access_key, $secret_access_key)
   {
     file { 'aws-creds-file':
-      path => '/etc/passwd-s3fs'
+      path => '/etc/passwd-s3fs',
       mode => '600',
       content => "$access_key:$secret_access_key",
     }
@@ -49,12 +50,12 @@ class s3fs {
       file => '/etc/passwd-s3fs',
       line => "$bucket:$access_key:$secret_access_key",
       require     => [
-                       File['aws-creds-file',
+                       File['aws-creds-file'],
                      ],        
     }
     
     file { 's3fs-cache-directory':
-      path => '/mnt/s3/cache'
+      path => '/mnt/s3/cache',
       ensure => directory,
     }
     
@@ -71,9 +72,9 @@ class s3fs {
                        Package['libcurl4-openssl-dev'],
                        Package['libxml2-dev'],
                        Package['libcrypto++-dev'],
-                       File["aws-creds-$bucket",
-                       File['s3fs-cache-directory',
-                     ],        
+                       File["aws-creds-$bucket"],
+                       File['s3fs-cache-directory'],
+                     ],
     }
 
     file { "/mnt/s3/$bucket":
