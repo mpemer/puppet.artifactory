@@ -1,8 +1,10 @@
 #!/bin/bash -eu
 
-##############################################################################
-# Copyright © 2012 Iteego.
-##############################################################################
+# iteego/puppet.s3fs: puppet recipes for use with the s3fs sofware
+#                     in debian-based systems.
+#
+# Copyright 2012 Iteego, Inc.
+# Author: Marcus Pemer <marcus@iteego.com>
 #
 # This file is part of iteego/puppet.s3fs.
 #
@@ -17,7 +19,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with iteego/puppet.s3fs.  If not, see <http://www.gnu.org/licenses/>.
-##############################################################################
+#
 
 # Load module settings
 source $(dirname $0)/../module.conf
