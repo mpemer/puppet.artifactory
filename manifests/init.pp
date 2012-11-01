@@ -39,15 +39,8 @@ class s3fs {
     }
   }
 
-  define s3fs_mount ($bucket, $access_key, $secret_access_key, $name = 'unset' )
+  define s3fs_mount ($bucket, $access_key, $secret_access_key )
   {
-    if $name == 'unset' {
-      $mount_point = "/mnt/s3/$bucket"
-    }
-    else {
-      $mount_point = $name
-		}
-		    
     package {
       'pkg-config':
         ensure => present,
@@ -112,7 +105,7 @@ class s3fs {
                      ],
     }
 
-    file { "$mount_point":
+    file { "$name":
       ensure => directory,
       require     => [
                        Exec['s3fs-install'],
@@ -121,10 +114,10 @@ class s3fs {
         
     exec { "s3fs-mount-$bucket":
       path        => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
-      onlyif      => "/bin/df $mount_point 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
+      onlyif      => "/bin/df $name 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
       logoutput   => on_failure,
-      command     => "/usr/local/bin/s3fs $bucket $mount_point -o allow_other -o use_cache=/mnt/s3/cache",
-      require     => File["$mount_point"],
+      command     => "/usr/local/bin/s3fs $bucket $name -o allow_other -o use_cache=/mnt/s3/cache",
+      require     => File["$name"],
     }
 
   }
