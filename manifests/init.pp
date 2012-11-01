@@ -39,46 +39,46 @@ class s3fs {
     }
   }
   
-  define s3fs_mount ($bucket, $access_key, $secret_access_key )
+  define s3fs_installation
   {
     package {
-      "pkg-config-$bucket":
+      'pkg-config':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "build-essential-$bucket":
+      'build-essential':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "fuse-utils-$bucket":
+      'fuse-utils':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "mime-support-$bucket":
+      'mime-support':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "libfuse-dev-$bucket":
+      'libfuse-dev':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "libcurl4-openssl-dev-$bucket":
+      'libcurl4-openssl-dev':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "libxml2-dev-$bucket":
+      'libxml2-dev':
         ensure => present,
         require => Exec['aptgetupdate'];
-      "libcrypto++-dev-$bucket":
+      'libcrypto++-dev':
         ensure => present,
         require => Exec['aptgetupdate'];
     }  
   
-    file { "aws-creds-file-$bucket":
+    file { 'aws-creds-file':
       path => '/etc/passwd-s3fs',
       mode => '600',
     }
 
-    file { "s3fs-cache-directory-$bucket":
+    file { 's3fs-cache-directory':
       path => '/mnt/s3/cache',
       ensure => directory,
     }
     
-    exec { "s3fs-install-$bucket":
+    exec { 's3fs-install':
       path        => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
       creates     => '/usr/local/bin/s3fs',
       logoutput   => on_failure,
@@ -96,19 +96,24 @@ class s3fs {
                      ],
     }
     
+  }
+
+
+  define s3fs_mount ($bucket, $access_key, $secret_access_key )
+  {
     line { "aws-creds-$bucket":
       file => '/etc/passwd-s3fs',
       line => "$bucket:$access_key:$secret_access_key",
       require     => [
-                       File["aws-creds-file-$bucket"],
+                       File["aws-creds-file"],
                      ],        
     }
     
-    file { "$name-$bucket":
+    file { "$name":
       path => "$name",
       ensure => directory,
       require     => [
-                       Exec["s3fs-install-$bucket"],
+                       Exec["s3fs-install"],
                      ],        
     }
         
