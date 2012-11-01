@@ -33,6 +33,8 @@ as a git submodule, like so:
 
 Don't forget to commit your submodule ref in your parent repository
 
+## Example Usage
+
 After this is done, you can use the submodule like so:
 
     include s3fs
