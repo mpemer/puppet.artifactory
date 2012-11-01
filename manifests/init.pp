@@ -1,7 +1,8 @@
 # iteego/puppet.s3fs: puppet recipes for use with the s3fs sofware
 #                     in debian-based systems.
 #
-# Copyright 2012 Iteego info@iteego.com
+# Copyright 2012 Iteego, Inc.
+# Author: Marcus Pemer <marcus@iteego.com>
 #
 # This file is part of iteego/puppet.s3fs.
 #
@@ -40,10 +41,36 @@ class s3fs {
 
   define s3fs_mount ($bucket, $access_key, $secret_access_key)
   {
+    package {
+      'pkg-config':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'build-essential':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'fuse-utils':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'mime-support':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'libfuse-dev':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'libcurl4-openssl-dev':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'libxml2-dev':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+      'libcrypto++-dev':
+        ensure => present,
+        require => Exec['aptgetupdate'];
+    }  
+  
     file { 'aws-creds-file':
       path => '/etc/passwd-s3fs',
       mode => '600',
-      content => "$access_key:$secret_access_key",
     }
 
     line { "aws-creds-$bucket":
@@ -62,7 +89,8 @@ class s3fs {
     exec { 's3fs-install':
       creates     => '/usr/local/bin/s3fs',
       logoutput   => on_failure,
-      command     => 'pwd >/tmp/pwd.txt; env >/tmp/env.txt; bin/install.sh',
+      path        => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
+      command     => '/etc/puppet/modules/s3fs/files/bin/install.sh',
       require     => [
                        Package['pkg-config'],
                        Package['build-essential'],
@@ -72,7 +100,7 @@ class s3fs {
                        Package['libcurl4-openssl-dev'],
                        Package['libxml2-dev'],
                        Package['libcrypto++-dev'],
-                       File["aws-creds-$bucket"],
+                       Line["aws-creds-$bucket"],
                        File['s3fs-cache-directory'],
                      ],
     }
@@ -87,7 +115,7 @@ class s3fs {
     exec { "s3fs-mount-$bucket":
       creates     => "/mnt/$bucket",
       logoutput   => on_failure,
-      command     => "/usr/local/bin/s3fs $bucket $mount_point -o allow_other -o use_cache=/mnt/s3/cache",
+      command     => "/usr/local/bin/s3fs $bucket /mnt/s3/$bucket -o allow_other -o use_cache=/mnt/s3/cache",
       require     => [
                        File["/mnt/s3/$bucket"],
                      ],        
