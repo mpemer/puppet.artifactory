@@ -57,3 +57,11 @@ After this is done, you can use the submodule like so:
 
 After the resource has been put in place by puppet, assuming your credentials
 were correct, you will have a mounted bucket at /mnt/s3/\<bucket-name\>
+
+## Future Improvements
+
+There are several areas where this module could be improved. Examples would include:
+* Support for other Operating systems than the Debian-based Linux distributions
+* More fine-grained control over mount options
+
+You are welcome to contribute to this project by forking it and submitting pull requests to the project maintainers (organization: iteego, current maintaners: mpemer and mbjarland)
