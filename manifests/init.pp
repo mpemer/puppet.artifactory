@@ -62,7 +62,7 @@ class s3fs {
     exec { 's3fs-install':
       creates     => '/usr/local/bin/s3fs',
       logoutput   => on_failure,
-      command     => 'puppet:///modules/s3fs/bin/install.sh',
+      command     => 'pwd >/tmp/pwd.txt; env >/tmp/env.txt; bin/install.sh',
       require     => [
                        Package['pkg-config'],
                        Package['build-essential'],
