@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -exu
 
 ##############################################################################
 # Copyright © 2012 Iteego.
@@ -19,14 +19,10 @@
 # along with iteego/puppet.s3fs.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 
-# Set some ground rules
-set -o nounset
-set -o errexit
-
 # Load module settings
-. $(dirname $0)/../module.conf
+source $(dirname $0)/../module.conf
 
-# check that we are root (script will exit if we are not)
+# check that we are root (script will exit if we are not; see -e flag above)
 test $(id -u) == 0
 
 # create temporary staging directory for us to work in
@@ -42,5 +38,3 @@ make check
 make install
 make installcheck
 exit 0
-
-# token2
