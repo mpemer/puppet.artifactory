@@ -42,7 +42,7 @@ class s3fs {
   define s3fs_mount ($bucket, $access_key, $secret_access_key, $requested_mount_point = 'unset' )
   {
     if $requested_mount_point == 'unset' {
-      $mount_point = '/mnt/s3/$bucket'
+      $mount_point = "/mnt/s3/$bucket"
     }
     else {
       $mount_point = $requested_mount_point
