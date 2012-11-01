@@ -113,12 +113,10 @@ class s3fs {
     }
         
     exec { "s3fs-mount-$bucket":
-      creates     => "/mnt/s3/$bucket",
       logoutput   => on_failure,
       command     => "/usr/local/bin/s3fs $bucket /mnt/s3/$bucket -o allow_other -o use_cache=/mnt/s3/cache",
-      require     => [
-                       File["/mnt/s3/$bucket"],
-                     ],        
+      subscribe   => File["/mnt/s3/$bucket"],
+      refreshonly => true,
     }
 
   }
