@@ -27,7 +27,7 @@ test $(id -u) == 0
 
 # create temporary staging directory for us to work in
 TMPDIR="$(mktemp -d /tmp/$(basename $0).XXXXXX)"
-trap "rm -f $TMPDIR; exit" INT TERM EXIT
+trap "rm -fR $TMPDIR; exit" INT TERM EXIT
 cd "$TMPDIR"
 wget -q "$SRC_URL"
 tar xzf "$PACKAGE_FILE_NAME"
