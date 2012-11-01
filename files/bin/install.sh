@@ -1,4 +1,4 @@
-#!/bin/bash -exu
+#!/bin/bash -eu
 
 ##############################################################################
 # Copyright © 2012 Iteego.
@@ -34,7 +34,6 @@ tar xzf "$PACKAGE_FILE_NAME"
 cd "$PACKAGE_NAME"
 ./configure
 make
-make check
 make install
 make installcheck
 exit 0
