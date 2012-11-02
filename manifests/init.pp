@@ -87,7 +87,6 @@ class artifactory {
       ensure => directory,
       owner => 'tomcat7',
       group => 'tomcat7',
-      mode  => '0700',
       source => "puppet:///modules/artifactory/etc",
       recurse => true,
       require => [
