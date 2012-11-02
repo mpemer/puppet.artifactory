@@ -19,7 +19,7 @@
 # along with iteego/puppet.s3fs.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-class s3fs {
+class s3fs-c {
 
   define line( $file, $line, $ensure = 'present' ) {
     case $ensure {
