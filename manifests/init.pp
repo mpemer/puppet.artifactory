@@ -64,7 +64,7 @@ class artifactory {
 
     file { 'artifactory.war':
       path => '/var/lib/tomcat7/webapps/artifactory.war',
-      source => "puppet:///modules/artifactory/artifactory-2.6.7.war",
+      source => '/etc/puppet/modules/artifactory/files/artifactory-2.6.7.war',
       require => Line['artifactory_home_var'],
     }
 
