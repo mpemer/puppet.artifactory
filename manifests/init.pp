@@ -57,8 +57,11 @@ class artifactory {
   
     file { 'artifactory_home_dir':
       path => '/var/lib/artifactory',
-      mode => '0777',
+      mode => '0700',
+      owner => 'tomcat7',
+      group => 'tomcat7',
       ensure => directory,
+      require => Package['tomcat7'],
     }
 
     line { 'artifactory_home_var':
@@ -70,10 +73,12 @@ class artifactory {
     file { 'artifactory.war':
       path => '/var/lib/tomcat7/webapps/artifactory.war',
       source => "puppet:///modules/artifactory/artifactory-2.6.4.war",
-      require => Line['artifactory_home_var'],
+      require => [
+                   Line['artifactory_home_var'],
+                   File['artifactory_home_dir'],
+                 ],
       notify  => Service['tomcat7'],
     }
-
       
   }
 
