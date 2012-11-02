@@ -50,18 +50,22 @@ class artifactory {
 		  	require => Exec['aptgetupdate'];
     }  
   
-    file { '/var/lib/tomcat7/webapps/artifactory.war':
-      source => "puppet://artifactory-2.6.7.war",
-    }
-
-    file { '/var/lib/artifactory':
+    file { 'artifactory_home_dir':
+      path => '/var/lib/artifactory',
+      mode => '0777',
       ensure => directory,
     }
 
-    line { 'ARTIFACTORY_HOME':
+    line { 'artifactory_home_var':
       file    => '/etc/environment',
       line    => 'export ARTIFACTORY_HOME=/var/lib/artifactory',
-      require => File['/var/lib/artifactory'],
+      require => File['artifactory_home_dir'],
+    }
+
+    file { 'artifactory.war':
+      path => '/var/lib/tomcat7/webapps/artifactory.war',
+      source => "puppet://artifactory-2.6.7.war",
+      require => File['artifactory_home_var'],
     }
 
   }
