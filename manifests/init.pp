@@ -123,7 +123,7 @@ class s3fs-c {
       path      => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
       onlyif    => "/bin/df $name 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
       logoutput => on_failure,
-      command   => "sudo -u $owner s3fs $bucket $name -o use_cache=/mnt/s3/cache",
+      command   => "sudo -u $owner s3fs $bucket $name -o default_permissions -o use_cache=/mnt/s3/cache",
       require   => [
                      Line["aws-creds-$bucket"],
                      File["$name"],
