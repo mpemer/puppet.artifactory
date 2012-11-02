@@ -110,7 +110,8 @@ class s3fs-c {
 
     line { "fstab-$bucket":
       file    => '/etc/fstab',
-      line    => "s3fs#$bucket  $name     fuse    defaults,noatime,uid=$uid,gid=$gid,allow_other,use_cache=/mnt/s3/cache 0 0",
+      line    => "s3fs#$bucket  $name     fuse    defaults,noatime,uid=$uid,gid=$gid,allow_other 0 0",
+      #line    => "s3fs#$bucket  $name     fuse    defaults,noatime,uid=$uid,gid=$gid,allow_other,use_cache=/mnt/s3/cache 0 0",
       require => [
                    File["aws-creds-file"],
                  ],        
