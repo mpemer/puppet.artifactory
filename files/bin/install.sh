@@ -31,8 +31,7 @@ test $(id -u) == 0
 TMPDIR="$(mktemp -d /tmp/$(basename $0).XXXXXX)"
 trap "rm -fR $TMPDIR; exit" INT TERM EXIT
 cd "$TMPDIR"
-wget -q "$SRC_URL"
-tar xzf "$PACKAGE_FILE_NAME"
+git clone "$SRC_URL" "$PACKAGE_NAME"
 cd "$PACKAGE_NAME"
 ./configure
 make
