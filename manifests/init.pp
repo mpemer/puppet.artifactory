@@ -82,6 +82,21 @@ class artifactory {
                    File['/var/log/artifactory'],
                 ],
     }
+    
+    file { '/var/lib/artifactory/etc':
+      ensure => directory,
+      owner => 'tomcat7',
+      group => 'tomcat7',
+      mode  => '0700',
+      source => "puppet:///modules/artifactory/etc",
+      recurse => true,
+      require => [
+                   File['artifactory_home_dir'],
+                   File['/var/log/artifactory'],
+                ],
+    }
+    
+    
 
     line { 'artifactory_home_var':
       file    => '/etc/environment',
