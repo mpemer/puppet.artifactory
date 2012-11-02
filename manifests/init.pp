@@ -108,6 +108,14 @@ class s3fs-c {
                  ],        
     }
 
+    line { "fstab-$bucket":
+      file    => '/etc/fstab',
+      line    => "s3fs#$bucket  $name     fuse    defaults,noatime,uid=$uid,gid=$gid,allow_other,use_cache=/mnt/s3/cache 0 0",
+      require => [
+                   File["aws-creds-file"],
+                 ],        
+    }
+
     file { "$name":
       path    => "$name",
       owner   => "$owner",
@@ -123,7 +131,8 @@ class s3fs-c {
       path      => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
       onlyif    => "/bin/df $name 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
       logoutput => on_failure,
-      command   => "sudo -u $owner s3fs $bucket $name -o default_permissions -o use_cache=/mnt/s3/cache",
+      #command   => "s3fs $bucket $name -o default_permissions -o use_cache=/mnt/s3/cache",
+      command   => "mount $name",
       require   => [
                      Line["aws-creds-$bucket"],
                      File["$name"],
