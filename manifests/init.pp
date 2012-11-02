@@ -51,7 +51,7 @@ class artifactory {
     }  
   
     file { '/var/lib/tomcat7/webapps/artifactory.war':
-      source => "puppet://artifactory-2.6.7.war,
+      source => "puppet://artifactory-2.6.7.war",
     }
 
     file { '/var/lib/artifactory':
