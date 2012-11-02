@@ -98,34 +98,36 @@ class s3fs-c {
     
   }
 
-
-  define s3fs_mount ($bucket, $access_key, $secret_access_key )
+  define s3fs_mount ($bucket, $owner='root', $group='root', $mode='0700', $access_key, $secret_access_key )
   {
     line { "aws-creds-$bucket":
-      file => '/etc/passwd-s3fs',
-      line => "$bucket:$access_key:$secret_access_key",
-      require     => [
-                       File["aws-creds-file"],
-                     ],        
+      file    => '/etc/passwd-s3fs',
+      line    => "$bucket:$access_key:$secret_access_key",
+      require => [
+                   File["aws-creds-file"],
+                 ],        
     }
-    
+
     file { "$name":
-      path => "$name",
-      ensure => directory,
-      require     => [
-                       Exec["s3fs-install"],
-                     ],        
+      path    => "$name",
+      owner   => "$owner",
+      group   => "$group",
+      mode    => "$mode",
+      ensure  => directory,
+      require => [
+                   Exec["s3fs-install"],
+                 ],        
     }
-        
+
     exec { "s3fs-mount-$bucket":
-      path        => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
-      onlyif      => "/bin/df $name 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
-      logoutput   => on_failure,
-      command     => "/usr/local/bin/s3fs $bucket $name -o allow_other -o use_cache=/mnt/s3/cache",
-      require     => [
-                       Line["aws-creds-$bucket"],
-                       File["$name"],
-                    ],
+      path      => '/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin',
+      onlyif    => "/bin/df $name 2>&1 | tail -1 | /bin/grep -E '^s3fs' -qv",
+      logoutput => on_failure,
+      command   => "/usr/local/bin/s3fs $bucket $name -o allow_other -o use_cache=/mnt/s3/cache",
+      require   => [
+                     Line["aws-creds-$bucket"],
+                     File["$name"],
+                   ],
     }
 
   }
