@@ -54,6 +54,14 @@ class artifactory {
       ensure => running,
 			require => Package['tomcat7'],
 		}
+
+    file { '/var/log/artifactory':
+      mode => '0750',
+      owner => 'tomcat7',
+      group => 'adm',
+      ensure => directory,
+      require => Package['tomcat7'],
+    }
   
     file { 'artifactory_home_dir':
       path => '/var/lib/artifactory',
@@ -62,6 +70,17 @@ class artifactory {
       group => 'tomcat7',
       ensure => directory,
       require => Package['tomcat7'],
+    }
+    
+    file { '/var/lib/artifactory/logs':
+      ensure => link,
+      owner => 'tomcat7',
+      group => 'tomcat7',
+      target => '/var/log/artifactory',
+      require => [
+                   File['artifactory_home_dir'],
+                   File['/var/log/artifactory'],
+                ],
     }
 
     line { 'artifactory_home_var':
