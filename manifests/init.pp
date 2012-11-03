@@ -42,9 +42,6 @@ class artifactory {
   define artifactory_installation
   {
     package {
-  		'nginx':
-	  		ensure => present,
-		  	require => Exec['aptgetupdate'];
   		'nginx-extras':
 	  		ensure => present,
 		  	require => Exec['aptgetupdate'];
@@ -72,7 +69,7 @@ class artifactory {
   
     service { 'nginx':
       ensure => running,
-			require => Package['nginx'],
+			require => Package['nginx-extras'],
 		}
 
     service { 'tomcat7':
