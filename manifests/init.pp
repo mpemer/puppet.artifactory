@@ -89,6 +89,7 @@ class artifactory {
       group => 'tomcat7',
       source => "puppet:///modules/artifactory/etc",
       recurse => true,
+      purge => true,
       require => [
                    File['artifactory_home_dir'],
                    File['/var/log/artifactory'],
