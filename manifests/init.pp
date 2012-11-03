@@ -50,8 +50,6 @@ class artifactory {
 		  	require => Exec['aptgetupdate'];
     }  
 
-
-
     file { '/etc/nginx/sites-available/artifactory':
       mode => '0644',
       owner => 'root',
@@ -72,7 +70,6 @@ class artifactory {
     service { 'nginx':
       ensure => running,
 			require => Package['nginx'],
-		  require => Exec['aptgetupdate'];
 		}
 
     service { 'tomcat7':
