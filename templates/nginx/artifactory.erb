@@ -4,20 +4,8 @@ upstream tomcat {
 
 server {
   listen          80;
-  server_name     gloin.iteego.com;
-  
-  location / { 
-    rewrite  ^/(.*)$ http://gloin.iteego.com/artifactory? break;
-  }   
-
-  location /artifactory/ {
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header Host $http_host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_redirect off;
-
-    proxy_pass http://tomcat/artifactory/;
-  }                                                                                                       
+  server_name     gloin.iteego.com;  
+  rewrite ^ https://$host$request_uri? permanent;
 }
 
 server {
