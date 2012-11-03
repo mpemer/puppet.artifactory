@@ -45,6 +45,9 @@ class artifactory {
   		'nginx':
 	  		ensure => present,
 		  	require => Exec['aptgetupdate'];
+  		'nginx-extras':
+	  		ensure => present,
+		  	require => Exec['aptgetupdate'];
   		'tomcat7':
 	  		ensure => present,
 		  	require => Exec['aptgetupdate'];
