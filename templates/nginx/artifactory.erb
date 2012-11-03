@@ -4,13 +4,13 @@ upstream tomcat {
 
 server {
   listen          80;
-  server_name     gloin.iteego.com;  
+  server_name     artifacts.iteego.com;  
   rewrite ^ https://$host$request_uri? permanent;
 }
 
 server {
   listen 443;
-  server_name gloin.iteego.com;
+  server_name artifacts.iteego.com;
 
   ssl on;
   ssl_certificate /etc/puppet/files/cert/iteego.com.pem;
