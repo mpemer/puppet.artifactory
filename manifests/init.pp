@@ -50,6 +50,31 @@ class artifactory {
 		  	require => Exec['aptgetupdate'];
     }  
 
+
+
+    file { '/etc/nginx/sites-available/artifactory':
+      mode => '0644',
+      owner => 'root',
+      group => 'root',
+      content => template('nginx/artifactory.erb'),
+      require => Package['tomcat7'],
+      notify => Service['nginx'],
+    }
+  
+    file { '/etc/nginx/sites-enabled/artifactory':
+      ensure => 'link',
+      owner => 'root',
+      group => 'root',
+      target => '/etc/nginx/sites-available/artifactory',
+      notify => Service['nginx'],
+    }
+  
+    service { 'nginx':
+      ensure => running,
+			require => Package['nginx'],
+		  require => Exec['aptgetupdate'];
+		}
+
     service { 'tomcat7':
       ensure => running,
 			require => Package['tomcat7'],
@@ -95,8 +120,6 @@ class artifactory {
                    File['/var/log/artifactory'],
                 ],
     }
-    
-    
 
     line { 'artifactory_home_var':
       file    => '/etc/environment',
