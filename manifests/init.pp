@@ -56,7 +56,7 @@ class artifactory {
       mode => '0644',
       owner => 'root',
       group => 'root',
-      content => template('nginx/artifactory.erb'),
+      content => template('artifactory/nginx/artifactory.erb'),
       require => Package['tomcat7'],
       notify => Service['nginx'],
     }
