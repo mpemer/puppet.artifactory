@@ -78,7 +78,7 @@ class artifactory {
 		}
 
     file { '/var/log/artifactory':
-      mode => '0750',
+      mode => '2750',
       owner => 'tomcat6',
       group => 'adm',
       ensure => directory,
