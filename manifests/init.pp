@@ -45,7 +45,7 @@ class artifactory {
   		'nginx-extras':
 	  		ensure => present,
 		  	require => Exec['aptgetupdate'];
-  		'tomcat7':
+  		'tomcat6':
 	  		ensure => present,
 		  	require => Exec['aptgetupdate'];
     }  
@@ -55,7 +55,7 @@ class artifactory {
       owner => 'root',
       group => 'root',
       content => template('artifactory/nginx/artifactory.erb'),
-      require => Package['tomcat7'],
+      require => Package['tomcat6'],
       notify => Service['nginx'],
     }
   
@@ -72,32 +72,32 @@ class artifactory {
 			require => Package['nginx-extras'],
 		}
 
-    service { 'tomcat7':
+    service { 'tomcat6':
       ensure => running,
-			require => Package['tomcat7'],
+			require => Package['tomcat6'],
 		}
 
     file { '/var/log/artifactory':
       mode => '0750',
-      owner => 'tomcat7',
+      owner => 'tomcat6',
       group => 'adm',
       ensure => directory,
-      require => Package['tomcat7'],
+      require => Package['tomcat6'],
     }
   
     file { 'artifactory_home_dir':
       path => '/var/lib/artifactory',
       mode => '0700',
-      owner => 'tomcat7',
-      group => 'tomcat7',
+      owner => 'tomcat6',
+      group => 'tomcat6',
       ensure => directory,
-      require => Package['tomcat7'],
+      require => Package['tomcat6'],
     }
     
     file { '/var/lib/artifactory/logs':
       ensure => link,
-      owner => 'tomcat7',
-      group => 'tomcat7',
+      owner => 'tomcat6',
+      group => 'tomcat6',
       target => '/var/log/artifactory',
       require => [
                    File['artifactory_home_dir'],
@@ -107,8 +107,8 @@ class artifactory {
     
     file { '/var/lib/artifactory/etc':
       ensure => directory,
-      owner => 'tomcat7',
-      group => 'tomcat7',
+      owner => 'tomcat6',
+      group => 'tomcat6',
       source => "puppet:///modules/artifactory/etc",
       recurse => true,
       require => [
@@ -124,13 +124,13 @@ class artifactory {
     }
 
     file { 'artifactory.war':
-      path => '/var/lib/tomcat7/webapps/artifactory.war',
+      path => '/var/lib/tomcat6/webapps/artifactory.war',
       source => "puppet:///modules/artifactory/artifactory-2.6.4.war",
       require => [
                    Line['artifactory_home_var'],
                    File['artifactory_home_dir'],
                  ],
-      notify  => Service['tomcat7'],
+      notify  => Service['tomcat6'],
     }
       
   }
