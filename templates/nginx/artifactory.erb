@@ -23,7 +23,7 @@ server {
   ssl_prefer_server_ciphers on;
 
   location / { 
-    rewrite  ^/(.*)$ https://gloin.iteego.com/artifactory? break;
+    rewrite  ^/(.*)$ https://artifacts.iteego.com/artifactory? break;
   }   
 
   location /artifactory/ {
