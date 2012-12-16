@@ -138,7 +138,7 @@ class artifactory {
 		  owner => 'root',
 		  group => 'root',
 		  content => template("artifactory/nginx/nginx.conf.erb"),
-		  require => Package['nginx'],
+		  require => Package['nginx-extras'],
 		  notify => Service['nginx'],
 	  }
   
