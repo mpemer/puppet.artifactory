@@ -87,7 +87,7 @@ class artifactory {
   
     file { 'artifactory_home_dir':
       path => '/var/lib/artifactory',
-      mode => '0700',
+      mode => '0755',
       owner => 'tomcat6',
       group => 'tomcat6',
       ensure => directory,
