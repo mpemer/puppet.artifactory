@@ -30,7 +30,7 @@ class artifactory {
         exec { "/bin/echo '${line}' >> '${file}'":
           unless => "/bin/grep -qFx '${line}' '${file}'",
         }
-      }    
+      }
       absent: {
         exec { "/bin/grep -vFx '${line}' '${file}' | /usr/bin/tee '${file}' > /dev/null 2>&1":
           onlyif => "/bin/grep -qFx '${line}' '${file}'",
@@ -38,7 +38,7 @@ class artifactory {
       }
     }
   }
-  
+
   define artifactory_installation
   {
     package {
@@ -48,7 +48,7 @@ class artifactory {
   		'tomcat6':
 	  		ensure => present,
 		  	require => Exec['aptgetupdate'];
-    }  
+    }
 
     file { '/etc/nginx/sites-available/artifactory':
       mode => '0644',
@@ -58,7 +58,7 @@ class artifactory {
       require => Package['tomcat6'],
       notify => Service['nginx'],
     }
-  
+
     file { '/etc/nginx/sites-enabled/artifactory':
       ensure => 'link',
       owner => 'root',
@@ -66,7 +66,16 @@ class artifactory {
       target => '/etc/nginx/sites-available/artifactory',
       notify => Service['nginx'],
     }
-  
+
+    file { '/etc/init.d/tomcat6':
+      mode => '0755',
+      owner => 'root',
+      group => 'root',
+      content => template('artifactory/tomcat6/etc/init.d/tomcat6.erb'),
+      require => Package['tomcat6'],
+      notify => Service['tomcat6'],
+    }
+
     service { 'nginx':
       ensure => running,
 			require => Package['nginx-extras'],
@@ -84,7 +93,7 @@ class artifactory {
       ensure => directory,
       require => Package['tomcat6'],
     }
-  
+
     file { 'artifactory_home_dir':
       path => '/var/lib/artifactory',
       mode => '0755',
@@ -93,7 +102,7 @@ class artifactory {
       ensure => directory,
       require => Package['tomcat6'],
     }
-    
+
     file { '/var/lib/artifactory/logs':
       ensure => link,
       owner => 'tomcat6',
@@ -104,7 +113,7 @@ class artifactory {
                    File['/var/log/artifactory'],
                 ],
     }
-    
+
     file { '/var/lib/artifactory/etc':
       ensure => directory,
       owner => 'tomcat6',
@@ -132,7 +141,7 @@ class artifactory {
                  ],
       notify  => Service['tomcat6'],
     }
-    
+
     file { '/etc/nginx/nginx.conf':
 		  mode => '0644',
 		  owner => 'root',
@@ -141,7 +150,7 @@ class artifactory {
 		  require => Package['nginx-extras'],
 		  notify => Service['nginx'],
 	  }
-  
+
   }
 
 }
